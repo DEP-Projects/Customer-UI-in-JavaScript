@@ -22,8 +22,15 @@
 /*===============================================================================
  * Global Variables
  *===============================================================================*/
-
-// Todo: add all global variable declaration here
+var form = document.getElementById('form');
+var id = document.getElementById('txt-id');
+var cusName = document.getElementById('txt-name');
+var address = document.getElementById('txt-address');
+var table = document.querySelector("#tbl-customers").children.item(1);
+var customerId=false;
+var customerName=false;
+var customerAddress=false;
+var inputsValidate=false;
 
 /*===============================================================================
  * Init
@@ -38,11 +45,80 @@ function init(){
 /*===============================================================================
  * Event Handlers and Timers
  *===============================================================================*/
-
-// Todo: add all event listeners and handlers here
+document.querySelector("#btn-save").addEventListener('click',function (event){
+    event.preventDefault();
+    inputsValidation();
+});
 
 /*===============================================================================
  * Functions
  *===============================================================================*/
-
 // Todo: add all functions
+/*fields validation*/
+function inputsValidation(){
+     var txtId = id.value;
+     var txtName = cusName.value;
+     var txtAddress = address.value;
+
+
+    if (txtId === '') {
+        setError(id, 'The Customer ID should follow the pattern CXXX; X={0-9}');
+    } else {
+        setSuccess(id);
+        customerId=true;
+    }
+    if (txtName === '') {
+        setError(cusName, 'Customer Name is required');
+    } else {
+        setSuccess(cusName);
+        customerName=true;
+    }
+    if (txtAddress === '') {
+        setError(address, 'Customer Address is required');
+    } else {
+        setSuccess(address);
+        customerAddress=true;
+    }
+    if(customerId && customerName && customerAddress){
+        inputsValidate=true;
+    }
+    if(inputsValidate){
+        var template = `
+    <tr>
+      <td>${txtId}</td>
+      <td>${txtName}</td>
+      <td>${txtAddress}</td>
+    </tr>`;
+        table.innerHTML += template;
+
+        var add = 0;
+        if(add==0){
+            document.getElementById("addBox").style.display='block';
+            add=1;
+        }else {
+            document.getElementById("addBox").style.display='none';
+            add=0;
+        }
+        document.querySelector("#btn").addEventListener('click',function (){
+            document.getElementById("addBox").style.display='none';
+        });
+
+    }
+
+}
+
+
+function setError(input, message) {
+    var formGroup = input.parentElement;
+
+    // add error class
+    formGroup.className = 'form-group error';
+
+    //add error text
+    formGroup.querySelector(".inValid").innerText = message;
+}
+
+function setSuccess(input) {
+    var formGroup = input.parentElement;
+    formGroup.className = 'form-group success';
+}
